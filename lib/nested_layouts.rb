@@ -10,11 +10,9 @@ module ActionView #:nodoc:
       def inside_layout(layout, &block)
         layout = (layout.to_s =~ /layouts\//) ? layout : "layouts/#{layout}"
         binding = block.binding if BINDING_REQUIRED
-
-        layout = Dir.entries("#{RAILS_ROOT}/app/views/layouts").detect { |a| /#{layout}/.match(a) }
         @template.instance_variable_set('@content_for_layout', capture(&block))
         concat(
-          @template.render(:file => "#{RAILS_ROOT}/app/views/layouts/#{layout}", :user_full_path => true),
+          @template.render(:file => @template.view_paths.find_template(layout, :html), :user_full_path => true),
           binding
         )
       end
