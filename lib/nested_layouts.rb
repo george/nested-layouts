@@ -8,6 +8,7 @@ module ActionView #:nodoc:
       # Wrap part of the template into layout.
       # All layout files must be in app/views/layouts.
       def inside_layout(layout, &block)
+        layout = (layout.to_s =~ /layouts\//) ? layout : "layouts/#{layout}"
         binding = block.binding if BINDING_REQUIRED
 
         layout = Dir.entries("#{RAILS_ROOT}/app/views/layouts").detect { |a| /#{layout}/.match(a) }
